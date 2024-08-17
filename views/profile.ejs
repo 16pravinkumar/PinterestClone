@@ -1,0 +1,197 @@
+<% include ./partials/header.ejs %>
+
+<!-- section_1 -->
+
+<header class="flex flex-col flex-wrap justify-center items-center p-4 md:py-8">
+  <form
+    hidden
+    id="uploadForm"
+    action="/profileUpload"
+    method="post"
+    enctype="multipart/form-data"
+  >
+    <input type="file" name="profileImage" />
+  </form>
+
+  <div class="relative">
+    <!-- profile image -->
+    <span
+      id="uploadIcon"
+      class="w-8 h-8 absolute bottom-3 right-4 bg-zinc-400 text-xxl rounded-full cursor-pointer flex justify-center items-center"
+      ><i class="ri-pencil-line"></i
+    ></span>
+
+    <img
+      class="w-20 h-20 md:w-40 md:h-40 object-cover rounded-full border-2 border-pink-600 p-1"
+      src="/images/UserFiles/<%= user.profileImage ? user.profileImage : 'default.jpeg' %>"
+      alt="profile"
+    />
+  </div>
+
+  <!-- class="w-full ml-4 md:flex md:flex-wrap md:items-center md:justify-center" -->
+
+  <div class="md:flex md:flex-wrap md:items-center md:justify-center">
+    <h2 class="text-3xl text-center mb-2 sm:mb-0 font-bold">
+      <%= user.username %>
+    </h2>
+  </div>
+
+  <ul class="hidden md:flex mx-auto w-full">
+    <li class="text-center w-full">
+      Posts:
+      <span class="font-semibold"><%= user.posts.length%></span>
+    </li>
+  </ul>
+
+  <!-- user meta form medium screens -->
+  <div class="hidden md:block">
+    <h1 class="font-semibold">@<%= user.fullname%></h1>
+    <span><%=user.bio%></span>
+  </div>
+
+  <!-- upload -->
+
+  <form
+    class="w-[30%]"
+    action="/uploadData"
+    method="post"
+    enctype="multipart/form-data"
+  >
+    <input
+      type="text"
+      id="default-search"
+      class="block md:w-full p-4 ps-10 text-sm text-red-900 border border-gr ay-300 rounded-lg bg-red-50 focus:ring-red-500 focus:border-blue-500 dark:border-red-600 dark:text-black dark:focus:ring-red-500 dark:focus:border-red-500 outline-none mt-2"
+      placeholder="Title"
+      name="title"
+      required
+    />
+    <input
+      type="text"
+      id="default-search"
+      class="block md:w-full p-4 ps-10 text-sm text-red-900 border border-gr ay-300 rounded-lg bg-red-50 focus:ring-red-500 focus:border-blue-500 dark:border-red-600 dark:text-black dark:focus:ring-red-500 dark:focus:border-red-500 outline-none mt-2"
+      placeholder="Content"
+      name="content"
+      required
+    />
+
+    <input
+      type="text"
+      id="default-search"
+      class="block md:w-full p-4 ps-10 text-sm text-red-900 border border-gr ay-300 rounded-lg bg-red-50 focus:ring-red-500 focus:border-blue-500 dark:border-red-600 dark:text-black dark:focus:ring-red-500 dark:focus:border-red-500 outline-none mt-2"
+      placeholder="Bio"
+      name="bio"
+      required
+    />
+
+    <div class="flex items-center justify-center md:w-full mt-3">
+      <label
+        for="dropzone-file"
+        class="flex flex-col items-center justify-center w-full h-auto border-2 border-red-300 border-dashed rounded-lg cursor-pointer bg-red-50 dark:hover:bg-red-800 dark:bg-red-700 hover:bg-red-100 dark:border-red-600 dark:hover:border-red-500 dark:hover:bg-red-600"
+      >
+        <div class="flex flex-col items-center justify-center pt-5 pb-6">
+          <svg
+            class="w-8 h-8 mb-4 text-red-500 dark:text-red-400"
+            aria-hidden="true"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 20 16"
+          >
+            <path
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
+            />
+          </svg>
+          <p class="mb-2 text-sm text-gray-500 dark:text-gray-400">
+            <span class="font-semibold">Click to upload</span> or drag and drop
+          </p>
+          <p class="text-xs text-gray-500 dark:text-gray-400">
+            SVG, PNG, JPG or GIF (MAX. 800x400px)
+          </p>
+        </div>
+        <input
+          id="dropzone-file"
+          type="file"
+          name="contentImage"
+          class="hidden"
+        />
+      </label>
+    </div>
+
+    
+    <input type="submit" value="Add new Post" class="w-full md:w-full flex justify-center items-center p-3 space-x-4 font-bold text-white rounded-xl shadow-lg px-9 bg-red-700 shadow-red-100 hover:bg-opacity-90 shadow-sm hover:shadow-lg border transition hover:-translate-y-0.5 duration-150 mt-4 cursor-pointer" />
+
+    
+  </form>
+</header>
+
+<% user.posts.forEach((post) => { %>
+<div class="w-full mt-3 bg-zinc-100 min-h-screen">
+  <div class="max-w-screen-xl mx-auto px-4 pt-16 pb-4">
+    <div class="flex flex-col flex-wrap md:flex-row md:-mx-2">
+      <div class="w-full md:w-1/2 lg:w-1/4 mb-4 lg:mb-2">
+        <div
+          class="h-72 md:h-96 block group relative mx-2 overflow-hidden shadow-lg"
+        >
+          <img
+            src="/images/UserFiles/<%=post.imageUrl%>"
+            class="absolute z-0 object-cover w-full h-72 md:h-96 transform group-hover:scale-150"
+          />
+          <div
+            class="absolute gradient transition duration-300 group-hover:bg-black group-hover:opacity-90 w-full h-72 md:h-96 z-10"
+          ></div>
+          <div
+            class="absolute left-0 right-0 bottom-0 p-6 z-30 transform translate-y-1/2 transition duration-300 h-full group-hover:translate-y-0 delay-100"
+          >
+            <div class="h-1/2 relative">
+              <div class="absolute bottom-0">
+                <h2
+                  class="font-bold text-white leading-tight transition duration-300 text-xl pb-6 group-hover:underline"
+                >
+                 <%=post.postTitle%>
+                </h2>
+              </div>
+            </div>
+            <div class="h-1/3 overflow-y-scroll mb-6 custom-scrollbar">
+              <p
+                class="text-white pb-4 opacity-0 transition duration-300 group-hover:opacity-100"
+              >
+               <%=post.postDes%>
+              </p>
+            </div>
+            <a
+              href=""
+              class="bg-red-600 text-white text-sm px-3 py-1 font-semibold opacity-0 transition duration-300 group-hover:opacity-100 border-2 border-red-100 focus:border-black focus:bg-red-300"
+            >
+              Delete
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="text-center text-white text-sm">
+    Created by
+    <a
+      href="https://stephenainsworth.com"
+      target="_blank"
+      title="Stephen Ainsworth - Web Developer"
+      >Stephen Ainsworth</a
+    >
+  </div>
+</div>
+<% }) %>
+
+<script>
+  document.querySelector("#uploadIcon").addEventListener("click", () => {
+    document.querySelector("#uploadForm input").click();
+  });
+
+  document.querySelector("#uploadForm input").addEventListener("change", () => {
+    document.querySelector("#uploadForm ").submit();
+  });
+</script>
+
+<% include ./partials/footer.ejs %>
